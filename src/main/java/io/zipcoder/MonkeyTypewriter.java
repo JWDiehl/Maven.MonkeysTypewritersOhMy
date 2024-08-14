@@ -26,37 +26,47 @@ public class MonkeyTypewriter {
 
         //UnsafeCopier THreads
         UnsafeCopier[] unsafeMonkeys = new UnsafeCopier[5];
+        Thread[] unsafeThreads = new Thread[unsafeMonkeys.length];
         for (int i = 0; i < unsafeMonkeys.length; i++) {
             unsafeMonkeys[i] = new UnsafeCopier(introduction);
-            new Thread(unsafeMonkeys[i]).start();
+            unsafeThreads[i] = new Thread(unsafeMonkeys[i]);
+            unsafeThreads[i].start();
         }
 
-        //Create and start SafeCopier threads
+        //create and start SafeCopier threads
         SafeCopier[] safeMonkeys = new SafeCopier[5];
+        Thread[] safeThreads = new Thread[safeMonkeys.length];
         for (int i = 0; i < safeMonkeys.length; i++) {
             safeMonkeys[i] = new SafeCopier(introduction);
-            new Thread(safeMonkeys[i]).start();
+            safeThreads[i] = new Thread(safeMonkeys[i]);
+            safeThreads[i].start();
         }
 
-        // This wait is here because main is still a thread and we want the main method to print the finished copies
-        // after enough time has passed.
-
-        //wait for all unsafeCopier threads to finish
-        for (UnsafeCopier monkey : unsafeMonkeys) {
+        //wait for all UnsafeCopier threads to finish
+        for (Thread thread : unsafeThreads) {
             try {
-                Thread.sleep(1000);
+                thread.join();
             } catch (InterruptedException e) {
-                System.out.println("MAIN INTERRUPTED");
+                System.out.println("UnsafeCopier thread interrupted");
             }
         }
 
-        // Print out the copied versions here.
+        //wait for all SafeCopier threads to finish
+        for (Thread thread : safeThreads) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                System.out.println("SafeCopier thread interrupted");
+            }
+        }
+
+        //print out the copied versions
         System.out.println("Results from UnsafeCopier:");
         for (UnsafeCopier monkey : unsafeMonkeys) {
             System.out.println(monkey.copied);
         }
 
-        System.out.println("\nRseults from SafeCopier:");
+        System.out.println("\nResults from SafeCopier:");
         for (SafeCopier monkey : safeMonkeys) {
             System.out.println(monkey.copied);
         }
