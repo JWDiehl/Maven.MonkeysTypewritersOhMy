@@ -34,5 +34,14 @@ public class MonkeyTypewriter {
         }
 
         // Print out the copied versions here.
+        System.out.println("Results from UnsafeCopier:");
+        for (UnsafeCopier monkey : unsafeMonkeys) {
+            System.out.println(monkey.copied);
+        }
+
+        System.out.println("\nRseults from SafeCopier:");
+        for (SafeCopier monkey : safeMonkeys) {
+            System.out.println(monkey.copied);
+        }
     }
 }
